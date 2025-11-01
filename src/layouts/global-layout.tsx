@@ -1,7 +1,12 @@
+import { Outlet } from "react-router";
+
 export default function GlobalLayout() {
   return (
     <div>
-      <div>Layout</div>
+      <header>헤더</header>
+      <main>
+        <Outlet />
+      </main>
     </div>
   );
 }
