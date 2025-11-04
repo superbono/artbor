@@ -1,11 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useSignUp } from "@/hooks/mutations/use-sign-up";
 import { useState, type SetStateAction } from "react";
 import { Link } from "react-router";
 
 export function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const { mutate: signUp } = useSignUp();
 
   const handleOnChangeEmail = (e: {
     target: { value: SetStateAction<string> };
@@ -22,6 +25,10 @@ export function SignUpPage() {
     // alert("회원가입");
     if (email.trim() === "") return;
     if (password.trim() === "") return;
+    signUp({
+      email,
+      password,
+    });
   };
 
   return (
