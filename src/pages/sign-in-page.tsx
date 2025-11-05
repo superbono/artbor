@@ -11,24 +11,26 @@ import { generateErrorMessage } from "@/lib/error";
 export function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { mutate: signInWithPassword } = useSignInWithPassword({
-    onError: (error) => {
-      const message = generateErrorMessage(error);
+  const { mutate: signInWithPassword, isPending: isSignInPending } =
+    useSignInWithPassword({
+      onError: (error) => {
+        const message = generateErrorMessage(error);
 
-      toast.error(message, {
-        position: "top-center",
-      });
-      setPassword("");
-    },
-  });
-  const { mutate: signInWithOAuth } = useSignInWithOAuth({
-    onError: (error) => {
-      const message = generateErrorMessage(error);
-      toast.error(message, {
-        position: "top-center",
-      });
-    },
-  });
+        toast.error(message, {
+          position: "top-center",
+        });
+        setPassword("");
+      },
+    });
+  const { mutate: signInWithOAuth, isPending: isSignInOAuthPending } =
+    useSignInWithOAuth({
+      onError: (error) => {
+        const message = generateErrorMessage(error);
+        toast.error(message, {
+          position: "top-center",
+        });
+      },
+    });
 
   const handleOnChangeEmail = (e: {
     target: { value: SetStateAction<string> };
@@ -51,6 +53,8 @@ export function SignInPage() {
     signInWithOAuth("github");
   };
 
+  const isPending = isSignInPending || isSignInOAuthPending;
+
   return (
     <div className="flex flex-col gap-8">
       <div className="text-xl font-bold">로그인</div>
@@ -61,6 +65,7 @@ export function SignInPage() {
           placeholder="exam@exam.com"
           value={email}
           onChange={handleOnChangeEmail}
+          disabled={isPending}
         />
         <Input
           className="py-6"
@@ -68,16 +73,22 @@ export function SignInPage() {
           placeholder="password"
           value={password}
           onChange={handleOnChangePassword}
+          disabled={isPending}
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Button className="w-full" onClick={handleSignInWithPassword}>
+        <Button
+          className="w-full"
+          onClick={handleSignInWithPassword}
+          disabled={isPending}
+        >
           로그인
         </Button>
         <Button
           className="w-full"
           variant={"outline"}
           onClick={handleSignInWithGithubClick}
+          disabled={isPending}
         >
           <img src={githubLogo} className="h-4 w-4" />
           GitHub 계정으로 로그인

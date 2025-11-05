@@ -10,7 +10,7 @@ export function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { mutate: signUp } = useSignUp({
+  const { mutate: signUp, isPending: isSignUpPending } = useSignUp({
     onError: (error) => {
       const message = generateErrorMessage(error);
       toast.error(message, {
@@ -51,6 +51,7 @@ export function SignUpPage() {
           placeholder="exam@exam.com"
           value={email}
           onChange={handleOnChangeEmail}
+          disabled={isSignUpPending}
         />
         <Input
           className="py-6"
@@ -58,10 +59,15 @@ export function SignUpPage() {
           placeholder="password"
           value={password}
           onChange={handleOnChangePassword}
+          disabled={isSignUpPending}
         />
       </div>
       <div>
-        <Button className="w-full py-4" onClick={handleSignUpSubmit}>
+        <Button
+          className="w-full py-4"
+          onClick={handleSignUpSubmit}
+          disabled={isSignUpPending}
+        >
           회원가입
         </Button>
       </div>
