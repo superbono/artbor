@@ -1,14 +1,24 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useSignUp } from "@/hooks/mutations/use-sign-up";
+import { generateErrorMessage } from "@/lib/error";
 import { useState, type SetStateAction } from "react";
 import { Link } from "react-router";
+import { toast } from "sonner";
 
 export function SignUpPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const { mutate: signUp } = useSignUp();
+  const { mutate: signUp } = useSignUp({
+    onError: (error) => {
+      const message = generateErrorMessage(error);
+      toast.error(message, {
+        position: "top-center",
+      });
+      setPassword("");
+    },
+  });
 
   const handleOnChangeEmail = (e: {
     target: { value: SetStateAction<string> };
