@@ -27,8 +27,20 @@ const useSessionStore = create(
   ),
 );
 
-// 커스텀 훅 생성
+// 세션에 관련된 커스텀훅
 export const useSession = () => {
   const session = useSessionStore((store) => store.session);
   return session;
+};
+
+// 로딩에 관련된 커스텀훅
+export const useIsSessionLoaded = () => {
+  const isSessionLoaded = useSessionStore((store) => store.isLoaded);
+  return isSessionLoaded;
+};
+
+// 세션에 상호작용 (setSession)을 사용하기 위한 커스텀훅
+export const useSetSession = () => {
+  const setSession = useSessionStore((store) => store.actions.setSession);
+  return setSession;
 };
