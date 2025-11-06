@@ -1,7 +1,104 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useSignInWithPassword } from "@/hooks/mutations/use-sign-in-with-password";
+import { useState, type SetStateAction } from "react";
+import { Link } from "react-router";
+import githubLogo from "@/assets/github-mark.svg";
+import { useSignInWithOAuth } from "@/hooks/mutations/use-sign-in-with-oauth";
+import { toast } from "sonner";
+import { generateErrorMessage } from "@/lib/error";
+
 export function SignInPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { mutate: signInWithPassword, isPending: isSignInPending } =
+    useSignInWithPassword({
+      onError: (error) => {
+        const message = generateErrorMessage(error);
+
+        toast.error(message, {
+          position: "top-center",
+        });
+        setPassword("");
+      },
+    });
+  const { mutate: signInWithOAuth, isPending: isSignInOAuthPending } =
+    useSignInWithOAuth({
+      onError: (error) => {
+        const message = generateErrorMessage(error);
+        toast.error(message, {
+          position: "top-center",
+        });
+      },
+    });
+
+  const handleOnChangeEmail = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setEmail(e.target.value);
+  };
+  const handleOnChangePassword = (e: {
+    target: { value: SetStateAction<string> };
+  }) => {
+    setPassword(e.target.value);
+  };
+
+  const handleSignInWithPassword = () => {
+    if (email.trim() === "") return;
+    if (password.trim() === "") return;
+    signInWithPassword({ email, password });
+  };
+
+  const handleSignInWithGithubClick = () => {
+    signInWithOAuth("github");
+  };
+
+  const isPending = isSignInPending || isSignInOAuthPending;
+
   return (
-    <div>
-      <div>로그인</div>
+    <div className="flex flex-col gap-8">
+      <div className="text-xl font-bold">로그인</div>
+      <div className="flex flex-col gap-2">
+        <Input
+          className="py-6"
+          type="email"
+          placeholder="exam@exam.com"
+          value={email}
+          onChange={handleOnChangeEmail}
+          disabled={isPending}
+        />
+        <Input
+          className="py-6"
+          type="password"
+          placeholder="password"
+          value={password}
+          onChange={handleOnChangePassword}
+          disabled={isPending}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Button
+          className="w-full"
+          onClick={handleSignInWithPassword}
+          disabled={isPending}
+        >
+          로그인
+        </Button>
+        <Button
+          className="w-full"
+          variant={"outline"}
+          onClick={handleSignInWithGithubClick}
+          disabled={isPending}
+        >
+          <img src={githubLogo} className="h-4 w-4" />
+          GitHub 계정으로 로그인
+        </Button>
+      </div>
+      <div>
+        <Link to={"/sign-up"} className="text-muted-foreground hover:underline">
+          계정이 없으시다면 ? 회원가입
+        </Link>
+      </div>
     </div>
   );
 }
