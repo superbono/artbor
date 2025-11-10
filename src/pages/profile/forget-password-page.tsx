@@ -1,7 +1,41 @@
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+
 export function ForgetPasswordPage() {
+  const [email, setEmail] = useState("");
+
+  const handleSendEmailClick = () => {
+    if (email.trim() === "") return;
+  };
+
   return (
-    <div>
-      <div>비밀번호찾기</div>
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-1">
+        <div className="text-xl font-bold">비밀번호 잊으셨나요?</div>
+        <div className="text-muted-foreground">
+          이메일로 비밀번호를 재설정 할 수 있는 링크를 보내드릴게요.
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <Input
+          className="py-6"
+          type="email"
+          placeholder="exam@exam.com"
+          value={email}
+          onChange={(e) => e.target.value}
+          // disabled={}
+        />
+      </div>
+      <div className="flex flex-col gap-2">
+        <Button
+          className="w-full"
+          // onClick={}
+          // disabled={}
+        >
+          인증 메일 요청하기
+        </Button>
+      </div>
     </div>
   );
 }
