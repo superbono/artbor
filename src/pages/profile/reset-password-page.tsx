@@ -1,13 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useUpdatePassword } from "@/hooks/mutations/use-update-password";
+import { generateErrorMessage } from "@/lib/error";
 import { useState } from "react";
+import { useNavigate } from "react-router";
+import { toast } from "sonner";
 
 export function ResetPasswordPage() {
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
+
+  const { mutate: updatePassword, isPending: isUpdatePasswordPending } =
+    useUpdatePassword({
+      onSuccess: () => {
+        toast.info("비밀번호가 성공적으로 변경되었습니다", {
+          position: "top-center",
+        });
+        navigate("/");
+      },
+      onError: (error) => {
+        const message = generateErrorMessage(error);
+        toast.error(message, {
+          position: "top-center",
+        });
+        setPassword("");
+      },
+    });
 
   const handleUpdatePasswordClick = () => {
     if (password.trim() === "") return;
-    setPassword("");
+    updatePassword(password);
   };
 
   return (
@@ -25,14 +47,14 @@ export function ResetPasswordPage() {
           placeholder="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          // disabled={}
+          disabled={isUpdatePasswordPending}
         />
       </div>
       <div className="flex flex-col gap-2">
         <Button
           className="w-full"
-          // onClick={}
-          // disabled={}
+          onClick={handleUpdatePasswordClick}
+          disabled={isUpdatePasswordPending}
         >
           비밀번호 변경하기
         </Button>
