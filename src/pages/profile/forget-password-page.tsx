@@ -1,12 +1,35 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useRequestPasswordResetEmail } from "@/hooks/mutations/use-request-password-reset-email";
+import { generateErrorMessage } from "@/lib/error";
 import { useState } from "react";
+import { toast } from "sonner";
 
 export function ForgetPasswordPage() {
   const [email, setEmail] = useState("");
 
+  const {
+    mutate: requestPasswordResetEmail,
+    isPending: isRequestPasswordResetEmailPending,
+  } = useRequestPasswordResetEmail({
+    onSuccess: () => {
+      toast.info("인증 메일이 잘 발송되었습니다.", {
+        position: "top-center",
+      });
+      setEmail("");
+    },
+    onError: (error) => {
+      const message = generateErrorMessage(error);
+      toast.error(message, {
+        position: "top-center",
+      });
+      setEmail("");
+    },
+  });
+
   const handleSendEmailClick = () => {
     if (email.trim() === "") return;
+    requestPasswordResetEmail(email);
   };
 
   return (
@@ -24,14 +47,14 @@ export function ForgetPasswordPage() {
           placeholder="exam@exam.com"
           value={email}
           onChange={(e) => e.target.value}
-          // disabled={}
+          disabled={isRequestPasswordResetEmailPending}
         />
       </div>
       <div className="flex flex-col gap-2">
         <Button
           className="w-full"
-          // onClick={}
-          // disabled={}
+          onClick={handleSendEmailClick}
+          disabled={isRequestPasswordResetEmailPending}
         >
           인증 메일 요청하기
         </Button>
