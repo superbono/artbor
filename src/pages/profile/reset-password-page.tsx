@@ -1,7 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { useState } from "react";
 
 export function ResetPasswordPage() {
+  const [password, setPassword] = useState("");
+
+  const handleUpdatePasswordClick = () => {
+    if (password.trim() === "") return;
+    setPassword("");
+  };
+
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-1">
@@ -15,8 +23,8 @@ export function ResetPasswordPage() {
           className="py-6"
           type="password"
           placeholder="password"
-          // value={}
-          // onChange={}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           // disabled={}
         />
       </div>

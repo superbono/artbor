@@ -46,7 +46,7 @@ export function ForgetPasswordPage() {
           type="email"
           placeholder="exam@exam.com"
           value={email}
-          onChange={(e) => e.target.value}
+          onChange={(e) => setEmail(e.target.value)}
           disabled={isRequestPasswordResetEmailPending}
         />
       </div>
