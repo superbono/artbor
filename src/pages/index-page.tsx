@@ -1,7 +1,9 @@
+import CreatePostButton from "@/components/post/create-post-button";
+
 export function IndexPage() {
   return (
-    <div>
-      <div>홈</div>
+    <div className="flex flex-col gap-10">
+      <CreatePostButton />
     </div>
   );
 }
